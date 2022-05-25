@@ -1,0 +1,14 @@
+{
+	"name": "rch_DatabricksDeltaLake",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "RCH Databricks Delta Table",
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLake",
+		"typeProperties": {
+			"domain": "https://adb-644832242654255.15.azuredatabricks.net",
+			"clusterId": "0523-215817-msi05g45",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDEzMkVCRTczLUM4NDYtNDg2NS05OTFELTE1ODkzRTY1QTNDMV84ZTBiNTM1MC02MTRjLTQzYjMtODJlZi1mMzMxOTA4Y2RhM2YiDQp9"
+		}
+	}
+}
