@@ -5,10 +5,13 @@
 		"factoryName": {
 			"value": "rch-databricks"
 		},
-		"rch_adls_gen2_csv_accountKey": {
+		"rch_ADLS_table_connectionString": {
 			"value": ""
 		},
-		"rch_ADLS_table_connectionString": {
+		"rch_DatabricksDeltaLake_accessToken": {
+			"value": ""
+		},
+		"rch_adls_gen2_csv_accountKey": {
 			"value": ""
 		},
 		"rch_adls_gen2_csv_properties_typeProperties_url": {

@@ -7,13 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "rch-databricks"
 		},
-		"rch_adls_gen2_csv_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'rch_adls_gen2_csv'"
-		},
 		"rch_ADLS_table_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'rch_ADLS_table'"
+		},
+		"rch_DatabricksDeltaLake_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'rch_DatabricksDeltaLake'"
+		},
+		"rch_adls_gen2_csv_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'rch_adls_gen2_csv'"
 		},
 		"rch_adls_gen2_csv_properties_typeProperties_url": {
 			"type": "string",
@@ -46,11 +50,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"rch_adls_gen2_csv_accountKey": {
-						"value": "[parameters('rch_adls_gen2_csv_accountKey')]"
-					},
 					"rch_ADLS_table_connectionString": {
 						"value": "[parameters('rch_ADLS_table_connectionString')]"
+					},
+					"rch_DatabricksDeltaLake_accessToken": {
+						"value": "[parameters('rch_DatabricksDeltaLake_accessToken')]"
+					},
+					"rch_adls_gen2_csv_accountKey": {
+						"value": "[parameters('rch_adls_gen2_csv_accountKey')]"
 					},
 					"rch_adls_gen2_csv_properties_typeProperties_url": {
 						"value": "[parameters('rch_adls_gen2_csv_properties_typeProperties_url')]"

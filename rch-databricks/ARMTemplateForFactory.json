@@ -7,13 +7,17 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "rch-databricks"
 		},
-		"rch_adls_gen2_csv_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'rch_adls_gen2_csv'"
-		},
 		"rch_ADLS_table_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'rch_ADLS_table'"
+		},
+		"rch_DatabricksDeltaLake_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'rch_DatabricksDeltaLake'"
+		},
+		"rch_adls_gen2_csv_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'rch_adls_gen2_csv'"
 		},
 		"rch_adls_gen2_csv_properties_typeProperties_url": {
 			"type": "string",
@@ -25,36 +29,97 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/rch_adls_gen2_csv')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/ADLS_csv_table_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "RCH ADLS Gen2 csv",
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('rch_adls_gen2_csv_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('rch_adls_gen2_csv_accountKey')]"
+				"description": "ADLS Gen2 csv files to ADLS Gen2 table",
+				"activities": [
+					{
+						"name": "Copy data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureTableSink",
+								"azureTableInsertType": "merge",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "rch_telco_cust_csv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ADLS_Table",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
-				}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/rch_telco_cust_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_Table')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/rch_ADLS_table')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/ADLS_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "RCH ADLS Gen2 Table",
+				"linkedServiceName": {
+					"referenceName": "rch_ADLS_table",
+					"type": "LinkedServiceReference"
+				},
 				"annotations": [],
-				"type": "AzureTableStorage",
+				"type": "AzureTable",
+				"schema": [],
 				"typeProperties": {
-					"connectionString": "[parameters('rch_ADLS_table_connectionString')]"
+					"tableName": "customer"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/rch_ADLS_table')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/rch_telco_cust_csv')]",
@@ -151,100 +216,55 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_csv_table_pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/rch_ADLS_table')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "ADLS Gen2 csv files to ADLS Gen2 table",
-				"activities": [
-					{
-						"name": "Copy data",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "AzureTableSink",
-								"azureTableInsertType": "merge",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "rch_telco_cust_csv",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ADLS_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
+				"description": "RCH ADLS Gen2 Table",
+				"annotations": [],
+				"type": "AzureTableStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('rch_ADLS_table_connectionString')]"
+				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/rch_telco_cust_csv')]",
-				"[concat(variables('factoryId'), '/datasets/ADLS_Table')]"
-			]
+			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/rch_DatabricksDeltaLake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "rch_ADLS_table",
-					"type": "LinkedServiceReference"
-				},
+				"description": "RCH Databricks Delta Table",
 				"annotations": [],
-				"type": "AzureTable",
-				"schema": [],
+				"type": "AzureDatabricksDeltaLake",
 				"typeProperties": {
-					"tableName": {
-						"value": "telco_customer",
-						"type": "Expression"
+					"domain": "https://adb-644832242654255.15.azuredatabricks.net",
+					"clusterId": "0523-215817-msi05g45",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('rch_DatabricksDeltaLake_accessToken')]"
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/rch_ADLS_table')]"
-			]
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/rch_adls_gen2_csv')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "RCH ADLS Gen2 csv",
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('rch_adls_gen2_csv_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('rch_adls_gen2_csv_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
