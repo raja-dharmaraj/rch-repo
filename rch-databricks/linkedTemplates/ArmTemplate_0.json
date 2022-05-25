@@ -205,7 +205,11 @@
 				"annotations": [],
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
-					"database": "customer_db"
+					"database": "customer_db",
+					"table": {
+						"value": "customer",
+						"type": "Expression"
+					}
 				},
 				"schema": []
 			},
@@ -284,6 +288,72 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/rch_telco_cust_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ADLS_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_csv_databricks_delta_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "ADLS gen2 csv files to Databricks Delta Tables",
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureDatabricksDeltaLakeSink",
+								"importSettings": {
+									"type": "AzureDatabricksDeltaLakeImportCommand"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "rch_telco_cust_csv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "rch_DatabricksDeltaLake_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/rch_telco_cust_csv')]",
+				"[concat(variables('factoryId'), '/datasets/rch_DatabricksDeltaLake_Dataset')]"
 			]
 		}
 	]
