@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "rch-databricks"
+		},
+		"rch_adls_gen2_csv_accountKey": {
+			"value": ""
+		},
+		"rch_adls_gen2_csv_properties_typeProperties_url": {
+			"value": "https://rchadlsgen2.dfs.core.windows.net"
+		}
+	}
+}
