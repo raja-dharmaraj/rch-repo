@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'rch_adls_gen2_csv'"
 		},
+		"rch_ADLS_table_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'rch_ADLS_table'"
+		},
 		"rch_adls_gen2_csv_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://rchadlsgen2.dfs.core.windows.net"
@@ -44,6 +48,9 @@
 					},
 					"rch_adls_gen2_csv_accountKey": {
 						"value": "[parameters('rch_adls_gen2_csv_accountKey')]"
+					},
+					"rch_ADLS_table_connectionString": {
+						"value": "[parameters('rch_ADLS_table_connectionString')]"
 					},
 					"rch_adls_gen2_csv_properties_typeProperties_url": {
 						"value": "[parameters('rch_adls_gen2_csv_properties_typeProperties_url')]"

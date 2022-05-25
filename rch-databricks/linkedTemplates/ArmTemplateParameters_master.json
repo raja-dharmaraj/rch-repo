@@ -8,6 +8,9 @@
 		"rch_adls_gen2_csv_accountKey": {
 			"value": ""
 		},
+		"rch_ADLS_table_connectionString": {
+			"value": ""
+		},
 		"rch_adls_gen2_csv_properties_typeProperties_url": {
 			"value": "https://rchadlsgen2.dfs.core.windows.net"
 		},
