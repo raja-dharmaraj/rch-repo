@@ -1,0 +1,9 @@
+{
+	"name": "rch-databricks",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2ff7e3b6-a1ab-465e-9750-329d862d0944",
+		"tenantId": "464759d5-4584-476c-b111-1090f3513520"
+	}
+}
