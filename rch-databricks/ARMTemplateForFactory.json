@@ -279,10 +279,7 @@
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
 					"database": "customer_db",
-					"table": {
-						"value": "customer",
-						"type": "Expression"
-					}
+					"table": "customer"
 				},
 				"schema": []
 			},
