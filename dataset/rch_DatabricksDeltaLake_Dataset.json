@@ -8,8 +8,7 @@
 		"annotations": [],
 		"type": "AzureDatabricksDeltaLakeDataset",
 		"typeProperties": {
-			"database": "customer_db",
-			"table": "customer"
+			"database": "customer_db"
 		},
 		"schema": []
 	}
